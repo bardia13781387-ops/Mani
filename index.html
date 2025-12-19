@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+<meta charset="UTF-8">
+<title>ثبت نام برنامه تمرینی</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;500;700&display=swap');
+* { box-sizing: border-box; margin:0; padding:0; }
+body {
+    font-family: 'Vazirmatn', sans-serif;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    direction: rtl;
+    padding: 20px;
+}
+.card {
+    width: 100%;
+    max-width: 500px;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(20px);
+    border-radius: 25px;
+    padding: 30px;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.4);
+    color: #fff;
+    transition: all 0.5s ease;
+}
+h2 { text-align: center; margin-bottom: 25px; font-weight: 700; letter-spacing: 0.5px; font-size: 28px; }
+input, select {
+    width: 100%; padding: 15px; margin: 12px 0;
+    border-radius: 12px; border: none; outline: none; font-size: 16px; background: rgba(255,255,255,0.9);
+}
+input::placeholder { color: #555; }
+select { cursor: pointer; font-size: 16px; }
+.btn {
+    width: 100%; padding: 18px; margin-top: 20px;
+    border: none; border-radius: 16px; font-size: 18px; font-weight: 700;
+    color: #fff; cursor: pointer;
+    background: linear-gradient(135deg, #00c6ff, #0072ff);
+    box-shadow: 0 12px 28px rgba(0,114,255,0.7);
+    transition: all 0.3s ease;
+}
+.btn:hover { transform: translateY(-3px); box-shadow: 0 16px 40px rgba(0,114,255,0.9); }
+.btn:active { transform: scale(0.97); }
+.invoice { display: none; background: rgba(255,255,255,0.12); border-radius: 20px; padding: 25px; text-align: right; }
+.invoice h3 { text-align:center; margin-bottom: 20px; font-size: 24px; }
+.invoice p { margin: 10px 0; font-size: 16px; }
+.footer { text-align: center; font-size: 14px; opacity: 0.8; margin-top: 20px; }
+@media (max-width: 600px) {
+    h2 { font-size: 24px; }
+    input, select { font-size: 14px; padding: 12px; }
+    .btn { font-size: 16px; padding: 15px; }
+    .invoice h3 { font-size: 20px; }
+    .invoice p { font-size: 14px; }
+}
+</style>
+</head>
+<body>
+
+<div class="card" id="formCard">
+    <h2>ثبت نام برنامه تمرینی</h2>
+    <input type="text" id="name" placeholder="نام و نام خانوادگی">
+    <input type="text" id="phone" placeholder="شماره موبایل">
+    
+    <select id="course">
+        <optgroup label="💪 بدنسازی">
+            <option value="بدنسازی مبتدی - 300 هزار تومان">مبتدی | ۳۰۰ هزار تومان</option>
+            <option value="بدنسازی متوسط - 500 هزار تومان">متوسط | ۵۰۰ هزار تومان</option>
+            <option value="بدنسازی حرفه‌ای - 700 هزار تومان">حرفه‌ای | ۷۰۰ هزار تومان</option>
+        </optgroup>
+        <optgroup label="🏊 شنا">
+            <option value="شنا مبتدی - 500 هزار تومان">مبتدی | ۵۰۰ هزار تومان</option>
+            <option value="شنا متوسط - 1 میلیون تومان">متوسط | ۱ میلیون تومان</option>
+            <option value="شنا پیشرفته - 2 میلیون تومان">پیشرفته | ۲ میلیون تومان</option>
+            <option value="شنا حرفه‌ای - 3 میلیون تومان">حرفه‌ای | ۳ میلیون تومان</option>
+        </optgroup>
+    </select>
+
+    <button class="btn" onclick="submitForm()">ثبت نام و مشاهده فاکتور</button>
+</div>
+
+<div class="card invoice" id="invoiceCard">
+    <h3>فاکتور ثبت سفارش شما</h3>
+    <p id="invName"></p>
+    <p id="invPhone"></p>
+    <p id="invCourse"></p>
+    <p id="invDate"></p>
+    <p style="text-align:center; font-weight:bold; color:#00ffcc;">✅ ثبت سفارش با موفقیت انجام شد!</p>
+    <div class="footer">پیام واتساپ آماده شده است و کافیست ارسال را بزنید.</div>
+</div>
+
+<script>
+function submitForm() {
+    const name = document.getElementById("name").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const course = document.getElementById("course").value;
+
+    if (!name || !phone) {
+        alert("لطفا همه فیلدها را کامل وارد کنید");
+        return;
+    }
+
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('fa-IR') + " - " + now.toLocaleTimeString('fa-IR');
+
+    document.getElementById("invName").innerText = "👤 نام: " + name;
+    document.getElementById("invPhone").innerText = "📱 شماره: " + phone;
+    document.getElementById("invCourse").innerText = "📦 دوره: " + course;
+    document.getElementById("invDate").innerText = "🕒 تاریخ و ساعت: " + dateStr;
+
+    document.getElementById("formCard").style.display = "none";
+    document.getElementById("invoiceCard").style.display = "block";
+
+    // باز کردن واتساپ با پیام آماده
+    const waNumber = "989052562077"; // شماره واتساپ با کد ایران
+    const waMessage = `🟢 ثبت نام جدید\n👤 نام: ${name}\n📱 شماره: ${phone}\n📦 دوره: ${course}\n🕒 تاریخ و ساعت: ${dateStr}`;
+    const waURL = `https://wa.me/${waNumber}?text=${encodeURIComponent(waMessage)}`;
+    window.open(waURL, "_blank");
+}
+</script>
+
+</body>
+</html>
