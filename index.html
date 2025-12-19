@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+<meta charset="UTF-8">
+<title>ثبت نام برنامه تمرینی</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;500;700&display=swap');
+
+* { box-sizing: border-box; margin:0; padding:0; }
+body {
+    font-family: 'Vazirmatn', sans-serif;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    direction: rtl;
+}
+
+.card {
+    width: 400px;
+    background: rgba(255,255,255,0.12);
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.4);
+    color: #fff;
+    transition: all 0.5s ease;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+input, select {
+    width: 100%;
+    padding: 14px;
+    margin: 12px 0;
+    border-radius: 12px;
+    border: none;
+    outline: none;
+    font-size: 14px;
+    background: rgba(255,255,255,0.9);
+}
+
+input::placeholder { color: #555; }
+select { cursor: pointer; }
+
+.btn {
+    width: 100%;
+    padding: 16px;
+    margin-top: 20px;
+    border: none;
+    border-radius: 14px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+    cursor: pointer;
+    background: linear-gradient(135deg, #00c6ff, #0072ff);
+    box-shadow: 0 10px 25px rgba(0,114,255,0.6);
+    transition: all 0.3s ease;
+}
+
+.btn:hover { transform: translateY(-3px); box-shadow: 0 15px 35px rgba(0,114,255,0.9); }
+.btn:active { transform: scale(0.97); }
+
+.invoice {
+    display: none;
+    background: rgba(255,255,255,0.1);
+    border-radius: 15px;
+    padding: 20px;
+    text-align: right;
+}
+
+.invoice h3 { text-align:center; margin-bottom: 20px; }
+
+.invoice p { margin: 8px 0; font-size: 14px; }
+
+.footer { text-align: center; font-size: 12px; opacity: 0.7; margin-top: 15px; }
+</style>
+</head>
+<body>
+
+<div class="card" id="formCard">
+    <h2>ثبت نام برنامه تمرینی</h2>
+
+    <input type="text" id="name" placeholder="نام و نام خانوادگی">
+    <input type="text" id="phone" placeholder="شماره موبایل">
+
+    <select id="course">
+        <option value="برنامه مبتدی - 500000 تومان">💪 مبتدی | ۵۰۰٬۰۰۰</option>
+        <option value="افزایش حجم - 800000 تومان">🔥 افزایش حجم | ۸۰۰٬۰۰۰</option>
+        <option value="چربی سوزی - 700000 تومان">⚡ چربی‌سوزی | ۷۰۰٬۰۰۰</option>
+    </select>
+
+    <button class="btn" onclick="submitForm()">ثبت نام و مشاهده فاکتور</button>
+</div>
+
+<div class="card invoice" id="invoiceCard">
+    <h3>فاکتور ثبت سفارش شما</h3>
+    <p id="invName"></p>
+    <p id="invPhone"></p>
+    <p id="invCourse"></p>
+    <p id="invDate"></p>
+    <p style="text-align:center; font-weight:bold; color:#00ffcc;">✅ ثبت سفارش با موفقیت انجام شد!</p>
+    <div class="footer">پیام به مربی ارسال شد و با شما تماس گرفته می‌شود.</div>
+</div>
+
+<script>
+function submitForm() {
+    const name = document.getElementById("name").value;
+    const phone = document.getElementById("phone").value;
+    const course = document.getElementById("course").value;
+
+    if (!name || !phone) {
+        alert("لطفا همه فیلدها را کامل وارد کنید");
+        return;
+    }
+
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('fa-IR') + " - " + now.toLocaleTimeString('fa-IR');
+
+    // نمایش فاکتور
+    document.getElementById("invName").innerText = "👤 نام: " + name;
+    document.getElementById("invPhone").innerText = "📱 شماره: " + phone;
+    document.getElementById("invCourse").innerText = "📦 دوره: " + course;
+    document.getElementById("invDate").innerText = "🕒 تاریخ و ساعت: " + dateStr;
+
+    document.getElementById("formCard").style.display = "none";
+    document.getElementById("invoiceCard").style.display = "block";
+
+    // ارسال پیام به تلگرام
+    const token = "7664982004:AAFAoIa79LlB3C0eGTnKNjWUc04S7g1NvA0";
+    const chatId = "@M1313209";
+    const message =
+        "🟢 ثبت نام جدید\n\n" +
+        "👤 نام: " + name + "\n" +
+        "📱 شماره: " + phone + "\n" +
+        "📦 دوره: " + course + "\n" +
+        "🕒 تاریخ و ساعت: " + dateStr;
+
+    fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ chat_id: chatId, text: message })
+    });
+}
+</script>
+
+</body>
+</html>
